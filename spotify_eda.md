@@ -3,60 +3,6 @@ Spotify Analysis
 Kevin
 20 February 2021
 
-    ## Warning: package 'tidyverse' was built under R version 3.6.3
-
-    ## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
-
-    ## v ggplot2 3.3.0     v purrr   0.3.3
-    ## v tibble  3.0.0     v dplyr   0.8.5
-    ## v tidyr   1.0.2     v stringr 1.4.0
-    ## v readr   1.3.1     v forcats 0.4.0
-
-    ## Warning: package 'ggplot2' was built under R version 3.6.3
-
-    ## Warning: package 'tibble' was built under R version 3.6.3
-
-    ## Warning: package 'tidyr' was built under R version 3.6.3
-
-    ## Warning: package 'purrr' was built under R version 3.6.3
-
-    ## Warning: package 'dplyr' was built under R version 3.6.3
-
-    ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
-    ## x dplyr::filter() masks stats::filter()
-    ## x dplyr::lag()    masks stats::lag()
-
-    ## Warning: package 'data.table' was built under R version 3.6.3
-
-    ## 
-    ## Attaching package: 'data.table'
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     between, first, last
-
-    ## The following object is masked from 'package:purrr':
-    ## 
-    ##     transpose
-
-    ## Warning: package 'lubridate' was built under R version 3.6.3
-
-    ## 
-    ## Attaching package: 'lubridate'
-
-    ## The following objects are masked from 'package:data.table':
-    ## 
-    ##     hour, isoweek, mday, minute, month, quarter, second, wday,
-    ##     week, yday, year
-
-    ## The following objects are masked from 'package:dplyr':
-    ## 
-    ##     intersect, setdiff, union
-
-    ## The following objects are masked from 'package:base':
-    ## 
-    ##     date, intersect, setdiff, union
-
 ## Importing data with correct data types
 
     ## Warning: 149 failed to parse.
@@ -158,10 +104,6 @@ Kevin
 
 ![](spotify_eda_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
-### Longest songs
-
-![](spotify_eda_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
-
 ## Artist Level Aggregates
 
 ### Most listened Artists by total number of songs played, distinct albums listened to, total duration listened to
@@ -185,10 +127,6 @@ Kevin
 
 ![](spotify_eda_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-#### Artist with most runtime
-
-![](spotify_eda_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
-
 ## Album Analysis
 
 ### Most listened to album
@@ -211,10 +149,6 @@ Kevin
 ### Most listened to album by number of songs
 
 ![](spotify_eda_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
-
-### Most listened to album by time
-
-![](spotify_eda_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ## Story of High Visceral Album
 
