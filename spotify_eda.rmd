@@ -5,59 +5,95 @@ date: "20 February 2021"
 output: rmarkdown::github_document
 ---
 
-```{r options(warn=-1), echo=FALSE}
+```{r, warning=FALSE, echo=FALSE, include=FALSE}
 library(tidyverse)
 library(data.table)
 library(lubridate)
+library(sqldf)
 library(knitr)
+options(dplyr.summarise.inform = FALSE)
 ```
 
-## Importing data with correct data types
-```{r, echo=FALSE}
+## Spotify Data 
+
+```{r, echo=FALSE, warning=FALSE}
+### Importing data with correct data types
 spotify_raw <- fread('data/song_features.csv')
-spotify <- spotify_raw %>% select(-V1) %>% 
+spotify_read <- spotify_raw %>% select(-V1) %>% 
   mutate(endTime=ymd_hm(endTime),
          album_release_date=ymd(album_release_date),
          completed=ifelse(msPlayed==duration_ms,1,0)) %>%
+  filter(albumName!="")
+attr(spotify_read$endTime, "tzone") <- "Asia/Kolkata"
+```
+
+```{r, echo=FALSE}
+### Creating time features
+spotify_time <- spotify_read %>% 
   mutate(year=year(endTime), month=month(endTime), day=day(endTime), week=week(endTime),
          date=date(endTime), wday=wday(endTime), hour=hour(endTime), minute=minute(endTime)) %>%
   arrange(endTime) %>%
-  filter(albumName!="")
-head(spotify) 
-summary(spotify)
+  mutate(streamID = row_number())
 ```
 
-## Song level Aggregates
-
-### Most listened to songs by instances and minutes
 ```{r, echo=FALSE}
+### Creating listening session id feature
+listening <- spotify_time %>% 
+  mutate(startTime = endTime - msPlayed*0.001, 
+         lag_endTime = lag(endTime),
+         timegap = as.integer((startTime) - lag(endTime)),
+         endTime_neg1mins = endTime - minutes(1),
+         endTime_10mins = endTime + minutes(10)
+         ) %>%
+  select(streamID, startTime, endTime, lag_endTime, endTime_10mins, endTime_neg1mins, msPlayed, timegap)
+start_stream <- sqldf("select distinct(streamID)
+      from ((select streamID, startTime from listening) a left join 
+      (select streamID as streamID1, endTime_neg1mins, endTime_10mins from listening) b 
+      on(a.startTime >= b.endTime_neg1mins and a.startTime <= b.endTime_10mins and a.streamID > b.streamID1))
+      where streamID1 is null
+      ")
+start_stream <- start_stream %>% mutate(
+  end_streamID = lead(streamID) - 1,
+  session_id = row_number()
+)
+spotify <- sqldf("select a.*, b.session_id
+      from spotify_time a left join start_stream b 
+      on(a.streamID>=b.streamID and a.streamID<=b.end_streamID)")
+
+last_session <- max(spotify$session_id, na.rm=TRUE) + 1
+spotify <- spotify %>% replace_na(list(session_id = last_session))
+kable(head(spotify))
+```
+
+
+## Most listened to songs 
+
+```{r, echo=FALSE, warning=FALSE}
 songs <- spotify %>% 
   group_by(artistName, trackName) %>%
   summarise(no_of_streams = n(), 
             total_minutes = sum(msPlayed)/60000,
             no_of_completed_streams = sum(completed)) %>%
   arrange(desc(no_of_streams)) %>%
-  head(10)
-songs
+  head(10) 
+kable(songs)
 ```
 
-#### By instances
-
+### By number of streams
 ```{r, echo=FALSE}
 songs %>% ggplot(aes(x=reorder(trackName, no_of_streams), y=no_of_streams)) + 
   geom_bar(stat="identity", aes(fill=trackName)) + coord_flip()
 ```
 
-#### By minutes
-
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=FALSE}
+### By minutes
 songs %>% ggplot(aes(x=reorder(trackName, total_minutes), y=total_minutes)) + 
   geom_bar(stat="identity", aes(fill=trackName)) + coord_flip()
 ```
 
-### Longest songs
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=FALSE}
+### Longest songs
 spotify %>% 
   filter(completed==1) %>%
   distinct(artistName, trackName, duration_ms) %>%
@@ -67,60 +103,56 @@ spotify %>%
   geom_bar(stat="identity", aes(fill=trackName)) + coord_flip()
 ```
 
-## Artist Level Aggregates
-
-### Most listened Artists by total number of songs played, distinct albums listened to, total duration listened to 
+## Most listened to Artists
 
 ```{r, echo=FALSE}
+### Most listened Artists by total number of songs played, distinct albums listened to, total duration listened to 
 artists <- spotify %>%
   group_by(artistName) %>%
   summarise(songs_played=n(), distinct_songs=n_distinct(trackName),
             distinct_albums=n_distinct(albumName), total_duration_hours=sum(msPlayed)/3600000,
             completed_songs=sum(completed)) %>%
-  arrange(desc(songs_played)) %>% head(10)
-artists
+  arrange(desc(total_duration_hours)) %>% head(10)
+kable(artists)
 ```
 
-#### Artist with most streams
-
-```{r, echo=FALSE}
-artists %>% ggplot(aes(x=reorder(artistName, songs_played), y=songs_played)) + 
-  geom_bar(stat="identity", aes(fill=artistName)) + coord_flip()
-```
-
-#### Artist with most runtime
-
+### By total duration
 ```{r, echo=FALSE}
 artists %>% ggplot(aes(x=reorder(artistName, total_duration_hours), y=total_duration_hours)) + 
   geom_bar(stat="identity", aes(fill=artistName)) + coord_flip()
 ```
 
 
-## Album Analysis
+```{r, echo=FALSE, include=FALSE}
+#### Artist with most runtime
+artists %>% ggplot(aes(x=reorder(artistName, total_duration_hours), y=total_duration_hours)) + 
+  geom_bar(stat="identity", aes(fill=artistName)) + coord_flip()
+```
 
-### Most listened to album
 
-```{r, echo=FALSE}
+## Most listened to album
+
+```{r, echo=FALSE, warning=FALSE}
 albums <- spotify %>%
   group_by(artistName, albumName) %>%
   summarise(no_of_songs_played=n(),
             total_duration_hours=sum(msPlayed)/3600000,
             completed_songs=sum(completed)) %>%
   arrange(desc(no_of_songs_played)) %>% head(10)
-albums
+kable(albums)
 
 ```
 
-### Most listened to album by number of songs
+### By Total duration
 
 ```{r, echo=FALSE}
-albums %>% ggplot(aes(x=reorder(albumName, no_of_songs_played), y=no_of_songs_played)) +
+albums %>% ggplot(aes(x=reorder(albumName, total_duration_hours), y=total_duration_hours)) +
   geom_bar(stat="identity", aes(fill=albumName)) + coord_flip()
 ```
 
-### Most listened to album by time
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=FALSE}
+### Most listened to album by time
 albums %>% ggplot(aes(x=reorder(albumName, total_duration_hours), y=total_duration_hours)) +
   geom_bar(stat="identity", aes(fill=albumName)) + coord_flip()
 ```
@@ -141,7 +173,7 @@ spotify %>%
 
 ## My favorite artists through the months
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 spotify %>% 
   filter(artistName %in% c('King Gizzard & The Lizard Wizard', 'A Beacon School', 'Psychedelic Porn Crumpets', 'Sufjan Stevens', 'Crumb'), year=='2020') %>%
   group_by(month,artistName) %>%
@@ -154,4 +186,29 @@ spotify %>%
 
   The shifting between artists is visible. There were quite a few KGATLW albums that I liked which kept me glued to their stuff till May till I got into PPC's High Visceral. There was one month there where I was really into Sufjan Steven's ambient album Aporia, a departure from my regular genres. After that, I wasn't into music a lot.
   
+## Listening Sessions
+
+```{r, echo=FALSE}
+sessions <- spotify %>%
+  mutate(starthour = hour(endTime - msPlayed*0.001)) %>%
+  group_by(session_id) %>%
+  summarise(no_of_songs = n(),
+            total_runtime = sum(msPlayed)/1000,
+            start_hour = head(starthour, 1)) %>%
+  arrange(session_id)
+kable(head(sessions))
+```
+
+There are about 720 listening sessions in about 1 year, so close to 2 sessions a day on average
+
+## When do I listen most during the day?
+
+```{r, echo=FALSE}
+sessions %>% 
+  group_by(start_hour) %>%
+  summarise(no_of_sessions=n()) %>%
+  ggplot(aes(x=start_hour, y=no_of_sessions)) +
+  geom_bar(stat="identity", aes(fill=start_hour)) 
+```
+
 
