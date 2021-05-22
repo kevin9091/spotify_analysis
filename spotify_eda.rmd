@@ -11,6 +11,8 @@ library(data.table)
 library(lubridate)
 library(sqldf)
 library(knitr)
+library(gganimate)
+library(gifski)
 options(dplyr.summarise.inform = FALSE)
 ```
 
@@ -174,14 +176,17 @@ spotify %>%
 ## My favorite artists through the months
 
 ```{r, echo=FALSE, warning=FALSE}
-spotify %>% 
-  filter(artistName %in% c('King Gizzard & The Lizard Wizard', 'A Beacon School', 'Psychedelic Porn Crumpets', 'Sufjan Stevens', 'Crumb'), year=='2020') %>%
+anim <- spotify %>% 
+  filter(artistName %in% c('King Gizzard & The Lizard Wizard', 'A Beacon School', 'Psychedelic Porn Crumpets', 'Sufjan Stevens', 'Crumb','Kikagaku Moyo','Radiohead','Feng Suave','MGMT'), year=='2020') %>%
   group_by(month,artistName) %>%
   summarise(count=n()) %>%
   arrange(month,artistName) %>%
-  ggplot(aes(x=month,y=artistName)) + 
-  geom_tile(stat="identity", aes(fill=count)) + 
-  scale_fill_gradient(low="yellow", high="red")
+  ggplot(aes(x=artistName, y=count)) + 
+  geom_col(aes(fill=artistName)) + 
+  coord_flip() +
+  labs(title = 'Month: {as.integer(frame_time)}') +
+  transition_time(month)
+animate(anim, nframes = 288,renderer = gifski_renderer("spotify_eda_files/artists_monthly.gif"), duration=12)
 ```
 
   The shifting between artists is visible. There were quite a few KGATLW albums that I liked which kept me glued to their stuff till May till I got into PPC's High Visceral. There was one month there where I was really into Sufjan Steven's ambient album Aporia, a departure from my regular genres. After that, I wasn't into music a lot.

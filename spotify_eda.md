@@ -7,12 +7,12 @@ Kevin
 
 | endTime             | artistName                       | trackName      | msPlayed | albumName                | duration\_ms | popularity | track\_no | tracks\_in\_album | album\_release\_date | completed | year | month | day | week | date       | wday | hour | minute | streamID | session\_id |
 | :------------------ | :------------------------------- | :------------- | -------: | :----------------------- | -----------: | ---------: | --------: | ----------------: | :------------------- | --------: | ---: | ----: | --: | ---: | :--------- | ---: | ---: | -----: | -------: | ----------: |
-| 2020-02-03 20:04:00 | King Gizzard & The Lizard Wizard | Searching…     |    30820 | Polygondwanaland         |       183546 |         23 |         9 |                10 | 2017-11-18           |         0 | 2020 |     2 |   3 |    5 | 2020-02-03 |    2 |   20 |      4 |        1 |           1 |
-| 2020-02-04 08:56:00 | King Gizzard & The Lizard Wizard | The River      |   541723 | Quarters\!               |       610253 |         35 |         1 |                 5 | 2015-05-01           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    8 |     56 |        2 |           2 |
-| 2020-02-04 09:01:00 | King Gizzard & The Lizard Wizard | Rattlesnake    |   128708 | Flying Microtonal Banana |       468093 |         38 |         1 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |      1 |        3 |           2 |
-| 2020-02-04 09:04:00 | King Gizzard & The Lizard Wizard | Melting        |    71099 | Flying Microtonal Banana |       327333 |         28 |         2 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |      4 |        4 |           2 |
-| 2020-02-04 09:09:00 | King Gizzard & The Lizard Wizard | Sleep Drifter  |   269072 | Flying Microtonal Banana |       284853 |         33 |         4 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |      9 |        5 |           2 |
-| 2020-02-04 09:35:00 | King Gizzard & The Lizard Wizard | Nuclear Fusion |   224722 | Flying Microtonal Banana |       255453 |         36 |         8 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |     35 |        6 |           3 |
+| 2020-02-03 20:04:00 | King Gizzard & The Lizard Wizard | Searching…     |    30820 | Polygondwanaland         |       183546 |         24 |         9 |                10 | 2017-11-18           |         0 | 2020 |     2 |   3 |    5 | 2020-02-03 |    2 |   20 |      4 |        1 |           1 |
+| 2020-02-04 08:56:00 | King Gizzard & The Lizard Wizard | The River      |   541723 | Quarters\!               |       610253 |         33 |         1 |                 5 | 2015-05-01           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    8 |     56 |        2 |           2 |
+| 2020-02-04 09:01:00 | King Gizzard & The Lizard Wizard | Rattlesnake    |   128708 | Flying Microtonal Banana |       468093 |         39 |         1 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |      1 |        3 |           2 |
+| 2020-02-04 09:04:00 | King Gizzard & The Lizard Wizard | Melting        |    71099 | Flying Microtonal Banana |       327333 |         30 |         2 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |      4 |        4 |           2 |
+| 2020-02-04 09:09:00 | King Gizzard & The Lizard Wizard | Sleep Drifter  |   269072 | Flying Microtonal Banana |       284853 |         34 |         4 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |      9 |        5 |           2 |
+| 2020-02-04 09:35:00 | King Gizzard & The Lizard Wizard | Nuclear Fusion |   224722 | Flying Microtonal Banana |       255453 |         37 |         8 |                 9 | 2017-02-24           |         0 | 2020 |     2 |   4 |    5 | 2020-02-04 |    3 |    9 |     35 |        6 |           3 |
 
 ## Most listened to songs
 
@@ -37,7 +37,7 @@ Kevin
 
 | artistName                       | songs\_played | distinct\_songs | distinct\_albums | total\_duration\_hours | completed\_songs |
 | :------------------------------- | ------------: | --------------: | ---------------: | ---------------------: | ---------------: |
-| King Gizzard & The Lizard Wizard |           797 |              88 |               15 |              56.594945 |              366 |
+| King Gizzard & The Lizard Wizard |           797 |              88 |               15 |              56.594945 |              365 |
 | Psychedelic Porn Crumpets        |           451 |              35 |                5 |              26.671862 |              239 |
 | A Beacon School                  |           184 |              11 |                1 |              10.106069 |              126 |
 | Kikagaku Moyo                    |           147 |              18 |                5 |               9.771851 |               85 |
@@ -82,7 +82,7 @@ Eventually, I moved on to some other album.
 
 ## My favorite artists through the months
 
-![](spotify_eda_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+![](spotify_eda_files/figure-gfm/unnamed-chunk-16-1.gif)<!-- -->
 
 The shifting between artists is visible. There were quite a few KGATLW
 albums that I liked which kept me glued to their stuff till May till I
