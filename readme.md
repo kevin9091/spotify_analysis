@@ -1,4 +1,4 @@
-## Steps to collect and prepare and analyse my own Spotify viewing history data -
+### Steps to collect and prepare and analyse my own Spotify viewing history data -
 
 1) We can obtain entire data that spotify collects on us by going to their site and requesting our data.
 
